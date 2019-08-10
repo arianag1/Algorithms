@@ -6,23 +6,60 @@ import java.util.*;
 import java.util.concurrent.*;
 import java.util.regex.*;
 
-public class BalancedBrackets {
+public class Solution {
 
     // Complete the isBalanced function below.
     static String isBalanced(String s) {
-        Stack<Character> delims = new Stack<Character>();
+        if(s.length() % 2 != 0)return "NO";
+
+        Stack<Character> openDelims = new Stack<Character>();
+        Stack<Character> closingDelims = new Stack<Character>();
+
         for(int i = 0; i < s.length(); i++){
-            char delim = s.charAt(i); 
-            if(delim == '{' || delim == '[' || delim == '('){
-                delims.push(Character.valueOf(delim));
-            }else if(delim == '}' && !delims.peek().equals('{') || delim == ']' && !delims.peek().equals('[') || delim == ')' && !delims.peek().equals('(')){
-                return "NO"; 
-            }else{
-                delims.pop(); 
+            char ch = s.charAt(i);
+            if(ch == '{' || ch == '(' || ch == '[')
+                openDelims.push(ch);
+            else if(ch == '}' || ch == ')' || ch == ']'){
+                if(openDelims.empty())
+                    return "NO"; 
+                if(ch == '}' && openDelims.peek() == '{')
+                    openDelims.pop(); 
+                else if(ch == ')' && openDelims.peek() == '(')
+                    openDelims.pop(); 
+                else if(ch == ']' && openDelims.peek() == '[')
+                    openDelims.pop();
+                else
+                    closingDelims.push(ch);
             }
         }
 
-        return "YES"; 
+        while(!openDelims.empty() || !closingDelims.empty()){
+            if(!openDelims.empty() && closingDelims.empty())
+                return "NO";
+            else if(openDelims.empty() && !closingDelims.empty())
+                return "NO"; 
+            else if(openDelims.peek() == '{'){
+                if(closingDelims.peek() == '}'){
+                    openDelims.pop();
+                    closingDelims.pop();
+                }else
+                    return "NO"; 
+            }else if(openDelims.peek() == '('){
+                if(closingDelims.peek() == ')'){
+                    openDelims.pop();
+                    closingDelims.pop();
+                }else
+                    return "NO"; 
+            }else if(openDelims.peek() == '['){
+               if(closingDelims.peek() == ']'){
+                    openDelims.pop();
+                    closingDelims.pop();
+                }else
+                    return "NO"; 
+            }
+        }
+       
+       return "YES"; 
     }
 
     private static final Scanner scanner = new Scanner(System.in);
