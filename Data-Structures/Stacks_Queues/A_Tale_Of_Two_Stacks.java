@@ -4,7 +4,7 @@ import java.text.*;
 import java.math.*;
 import java.util.regex.*;
 
-public class Solution {
+public class A_Tale_Of_Two_Stacks {
     private static class MyQueue<T>{
         private Stack<T> pushStack = new Stack();
         private Stack<T> popStack = new Stack();
